@@ -1,5 +1,31 @@
 const express = require('express');
 const router = express.Router();
+let player=[];
+
+router.post('/player',function(req,res){
+
+    let players=req.body;
+    let playername=players.name
+    for(let i=0;i<player.length;i++)
+    {
+        if(player[i].name == playername)
+        {
+            res.send("player already exist")
+        }
+    }
+        player.push(players)
+        console.log(player)
+        res.send(player)
+    
+});
+
+
+
+
+
+
+
+
 
 router.get('/students/:name', function(req, res) {
     let studentName = req.params.name
