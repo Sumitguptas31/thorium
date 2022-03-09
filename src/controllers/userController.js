@@ -103,7 +103,7 @@ const postMessage = async function (req, res) {
     //userId comparision to check if the logged-in user is requesting for their own data
     if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
 
-    let user = await userModel.findById(req.params.userId)
+    let user =  userModel.findById(req.params.userId)
     if(!user) return res.send({status: false, msg: 'No such user exists'})
     
     let updatedPosts = user.posts
@@ -114,9 +114,19 @@ const postMessage = async function (req, res) {
     //return the updated user document
     return res.send({status: true, data: updatedUser})
 }
+const deleteUser = async function( req,res)
+{
+let id = req.params.userId;
+let userdel = await userModel.findByIdAndUpdate(
+  {_id:id},{$set:{isDeleted:true}},
+  {new:true})
+  res.send({status:true,msg:userdel})
+}
+
 
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
 module.exports.postMessage = postMessage
+module.exports.deleteUser = deleteUser;
