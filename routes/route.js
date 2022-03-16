@@ -12,9 +12,9 @@ router.get('/blogs',blogController.getBlogs);
 
 router.put('/blogs/:blogId',middleware.auth,blogController.updateBlog);
 
-router.delete('/blogs/:blogId', blogController.deleteById);
+router.delete('/blogs/:blogId',middleware.auth, blogController.deleteById);
 
-router.delete('/blogs', blogController.deleteByQuery);
+router.delete('/blogs',middleware.auth, blogController.deleteByQuery);
 
 router.post('/login', authorController.authorLogIn);
 
