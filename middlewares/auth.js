@@ -1,5 +1,6 @@
 const { route } = require("../routes/route");
 const jwt = require("jsonwebtoken");
+const blogModel = require("../models/blogModel");
 
 const auth = async (req,res,next)=>{
     try {
@@ -9,6 +10,7 @@ const auth = async (req,res,next)=>{
         }
         else{
             let decodedToken = jwt.verify(token,'functionup-project');
+
             if(decodedToken){
                 req.author = decodedToken;
                 next();
@@ -24,17 +26,19 @@ const auth = async (req,res,next)=>{
 }
 const authorise = function(req, res, next) {
     // comapre the logged in user's id and the id in request
-    let token = req.headers["x-auth-token"]
+    let token = req.headers["x-api-key"]
+    console.log(token)
     if(!token) return res.send({status: false, msg: "token must be present in the request header"})
-    let decodedToken = jwt.verify(token, 'functionup-thorium')
-    let userToBeModified = req.params.authorId
+    let decodedToken = jwt.verify(token, 'functionup-project')
+    console.log(decodedToken)
+    let userToBeModified = req.params.author
     //userId for the logged-in user
-    let userLoggedIn = decodedToken.authorId
+    let userLoggedIn = decodedToken.blogId
 
     //userId comparision to check if the logged-in user is requesting for their own data
     if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
 
-    let user = userModel.findById(req.params.authorId)
+    let user = blogModel.findById(req.params.blogId)
     if(!user) return res.send({status: false, msg: 'No such user exists'})
     
     next()
